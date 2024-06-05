@@ -1,28 +1,50 @@
-"""Метод половинного деления, а - начало интервала, b - конец интеравала, DElTA - погрешность"""
+"""Численное дифференцирование"""
+import math
+import matplotlib.pyplot as plt
 
-def function(x):
-    return x**2 - 2
 
-def methodBisection(a, b, DELTA):
-    if function(a) * function(b) > 0:     # предусловие
-        print("Условие не выполнено, повторите ввод")
-        return
-    # выолняем, пока интервал не будет меньше погрешности
-    while (b - a) / 2 > DELTA:
-        c = (a + b) / 2
-        # получен ответ
-        if function(c) == 0:
-            return c
-        # определение половины
-        elif function(a) * function(c) < 0:
-            b = c
-        else:
-            a = c
+# функция для вычисления значения производной  конечные разности (симметричная)
+def numDerSim(function, x, h = 1e-8):
+    return (function(x + h) - function(x -h)) / (2 * h)
 
-    return (a + b) / 2
+
+# функция для вычисления значения производной  конечные разности (левая)
+def numDerLeft(function, x, h = 1e-5):
+    return (function(x) - function(x - h)) / h
+
+
+# функция для вычисления значения производной  конечные разности (правая)
+def numDerRight(function, x, h = 1e-5):
+    return (function(x + h) - function(x)) / h
+
+
+# производная от функции
+def derFunction(x):
+    return math.cos(x)
+
+
+# производная от функции
+def myFunction(x):
+    return math.sin(x)
+
 
 def main():
-    print(methodBisection(0.1, 3, 0.00001))
+    # инициализация массивов
+    x = []
+    y = []
+    # производная в точке на инетравале [0, 4pi]
+    for i in range(0, 10 * int(4*math.pi) + 1, 1):
+        x.append(i / 10)
+        y.append(derFunction(i / 10) - numDerSim(myFunction, i / 10))
+
+    # построение графика
+    plt.plot(x, y, label = "Кривая 1")
+    plt.xlabel('x')  # подпись оси x
+    plt.ylabel('y')  # подпись оси y
+    plt.title('График двух кривых')  # заголовок графика
+    plt.legend()  # вывод легенды
+    plt.show()  # вывод графика
+
 
 if __name__ == "__main__":
     main()
